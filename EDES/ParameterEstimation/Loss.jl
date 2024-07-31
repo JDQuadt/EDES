@@ -96,7 +96,7 @@ function make_ErrorFunction(model::EDES, G_measurements::AbstractVector, G_timep
         
         # calculate sum of squared errors
         
-        total_error = sum(abs2,fit_error) + sum(abs2,regularisation_error)
+        total_error = sum(abs2,fit_error) #+ sum(abs2,regularisation_error)
         return total_error
     
     end
