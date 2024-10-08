@@ -1,15 +1,21 @@
 function DiabeticProgression(
-    long_time_points::AbstractVector{<:Real},
     synthetic_patient::SyntheticPatient,
+    long_time_points::AbstractVector{<:Real},
     k5_linear_rate::Real,
     k6_parabolic_rate::Real =0,
     k6_linear_rate::Real =0,
-    Health_bool::Bool = false,
+    Health_int::Int = 1, # 0 is healthy, 1 is diabetic, default is diabetic
     
 )
     # extract model and parameter values
     model = synthetic_patient.EDES
     parameter_values = synthetic_patient.ParameterValues
+
+    if Health_bool % 2 == 0
+        Health_bool = true
+    else
+        Health_bool = false
+    end
 
     # if the patient is healthy, return the initial parameter values
     if Health_bool
@@ -21,7 +27,6 @@ function DiabeticProgression(
     end
 
     # change the k5 value based on a linear decrease from its initial value
-
     k5s = parameter_values[1] .- (k5_linear_rate * long_time_points * parameter_values[1])
 
     # change the k6 value based on a parabolic increase and subsequent decrease from its initial value
@@ -37,4 +42,13 @@ function DiabeticProgression(
     I_pl_bs = I_pl_b .+ (0.7 * long_time_points * I_pl_b) #0.04
 
     return k5s, k6s, Gbs, I_pl_bs
+end
+
+function OnlyK5(
+    long_time_points::AbstractVector{<:Real},
+    synthetic_patient::SyntheticPatient,
+    k5_linear_rate::Real,
+    Health_bool::Bool = false,
+)
+
 end

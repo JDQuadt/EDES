@@ -53,7 +53,7 @@ function LocalSensitivityAnalysis(
                 plot!(combined_plot[1,2], outputs.time, outputs.plasma_insulin, label = "insulin", xlabel = "time (min)", ylabel = "insulin (uIU/mL)", linecolor = color_gradient[j])
             end
         end
-        savefig(combined_plot, "./Storage/LocalSensitivityAnalysis_$(parameter_names[x]).png")
+        savefig(combined_plot, "./SensitivityPlots/LocalSensitivityAnalysis_$(parameter_names[x]).png")
     end
 end
 
@@ -116,6 +116,6 @@ function LocalSensitivityAnalysis(
                 plot!(combined_plot[1,2], outputs.time, outputs.plasma_insulin, label = "insulin", xlabel = "time (min)", ylabel = "insulin (uIU/mL)", linecolor = color_gradient[j])
             end
         end
-        savefig(combined_plot, "./Storage/LocalSensitivityAnalysis_$(parameter_names[x]).png")
+        savefig(combined_plot, "./SensitivityPlots/LocalSensitivityAnalysis_$(parameter_names[x]).png")
     end
 end
