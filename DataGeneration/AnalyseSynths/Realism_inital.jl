@@ -18,8 +18,8 @@ function ensure_realism_initial(
     glucose_response = outputs.plasma_glucose
     insulin_response = outputs.plasma_insulin
 
-    # Glucose value must be increasing in the first half hour after meal
-    if any(diff(glucose_response[1:30]) .< 0)
+    # Glucose value must be increasing in the first 15 min after meal
+    if any(diff(glucose_response[1:15]) .< 0)
         println("Glucose value must be increasing in the first half hour after meal")
         return false
     end

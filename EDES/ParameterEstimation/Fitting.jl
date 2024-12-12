@@ -47,7 +47,7 @@ function ParameterEstimation(
         return
     end
     # find the best solution and select the parameters
-    println("Optimization successful for this initial set, continuing...")
+    println("Optimization successful! continuing...")
     best_index = argmin(objectives)
     best_parameters = parameters[best_index]
 

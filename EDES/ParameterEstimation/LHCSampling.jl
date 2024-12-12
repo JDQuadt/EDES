@@ -25,8 +25,21 @@ function Preselection_LHS(
         throw(ArgumentError("Lower bounds vector and upper bounds vector must have the same length and that length has to be the same as the number of parameters."))
     end
 
+    new_lb = copy(lb)
+    new_ub = copy(ub)
+
+    # check if one of the estimated params is k6 
+    if ("k6" in model.estimated_params)
+        # check at which position
+        k6_index = findfirst(x -> x == "k6", model.estimated_params)
+
+        # change the bounds of k6 to 0.1 and 2
+        new_lb[k6_index] = 0.1
+        new_ub[k6_index] = 2 
+    end
+    
     # Generate LHS samples between the lb and ub 
-    parameter_samples = QuasiMonteCarlo.sample(n_points, lb, ub, LatinHypercubeSample())
+    parameter_samples = QuasiMonteCarlo.sample(n_points, new_lb, new_ub, LatinHypercubeSample())
 
     initial_losses = []
     for i in axes(parameter_samples,2)

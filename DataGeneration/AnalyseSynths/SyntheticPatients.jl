@@ -52,6 +52,22 @@ function MakePatients(
 end
 
 
+
+"""
+function that selects the glucose and insulin values at the selected time points from a patient with some added noise.
+
+input:
+- patient: SyntheticPatient
+- time_points_G: time points to select glucose values
+- time_points_I: time points to select insulin values
+- Variation_G: variation in glucose values
+- Variation_I: variation in insulin values
+
+output:
+- glucose: glucose values at the selected time points
+- insulin: insulin values at the selected time points
+
+"""
 function SelectTimePoints(
     patient::SyntheticPatient,
     time_points_G::AbstractVector{<:Real} = [0,15,30,60,120,180,240],

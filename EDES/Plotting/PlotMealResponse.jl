@@ -19,7 +19,7 @@ function PlotMealResponse(
     V_G = (260/sqrt(BW/70))/1000 # volume of distribution of glucose
     Auc_from_gut = ((V_G*BW)/f_G)*trapz(outputs.time, outputs.glucose_gut_to_plasma_flux)*0.001
     #println(Auc_from_gut)
-    plot(glucose_plot, insulin_plot, Glucose_from_gut_plot, layout = (1, 3),legend=false)
+    plot(glucose_plot, insulin_plot, layout = (1, 2),legend=false)
 end
 
 function PlotMealResponse(
