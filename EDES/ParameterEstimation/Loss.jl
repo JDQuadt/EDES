@@ -71,12 +71,12 @@ function make_ErrorFunction(model::EDES, G_measurements::AbstractVector, G_timep
             
     function ErrorFunction(output,parameters)
         # define normalized loss for all four measurements
-        glucose_loss = (output.plasma_glucose[indices_timepoints[1]] .- G_measurements) / maximum(G_measurements)
-        insulin_loss = (output.plasma_insulin[indices_timepoints[2]] .- I_measurements) / maximum(I_measurements)
+        glucose_loss = ((output.plasma_glucose[indices_timepoints[1]] .- G_measurements) / maximum(G_measurements)) .* 10
+        insulin_loss = ((output.plasma_insulin[indices_timepoints[2]] .- I_measurements) / maximum(I_measurements)) .* 10
         
         # scaling term (ask Max for explanation of this term)
         scaling_term = maximum(G_measurements)
-        fit_error = scaling_term .* [glucose_loss; insulin_loss] 
+        fit_error = scaling_term .* [glucose_loss; insulin_loss]
         
 
         # regularisation terms 
@@ -86,7 +86,7 @@ function make_ErrorFunction(model::EDES, G_measurements::AbstractVector, G_timep
 
         # AUC of the glucose in the gut should be very similar to the glucose dose
         AUC_norm_G_gut = ((BW*VG)/f_G) * trapz(G_dynamic_times, output.glucose_gut_to_plasma_flux[times .<= 240])
-        error_AUC_G = abs((AUC_norm_G_gut - parameters[16])./10000)                                
+        error_AUC_G = abs((AUC_norm_G_gut - parameters[16]))./100                                
         
         # Steady state of the plasma glucose should after some time (240 min) return to the fasting glucose
         error_steady_state_G = (parameters[13] - output.plasma_glucose[times .== 240][1])
@@ -95,7 +95,6 @@ function make_ErrorFunction(model::EDES, G_measurements::AbstractVector, G_timep
         regularisation_error = [error_AUC_G; error_steady_state_G]
         
         # calculate sum of squared errors
-        
         total_error = sum(abs2,fit_error) + sum(abs2,regularisation_error)
         return total_error
     
