@@ -60,8 +60,9 @@ input:
 - patient: SyntheticPatient
 - time_points_G: time points to select glucose values
 - time_points_I: time points to select insulin values
-- Variation_G: variation in glucose values
-- Variation_I: variation in insulin values
+- variation_G
+: variation in glucose values
+- variation_I: variation in insulin values
 
 output:
 - glucose: glucose values at the selected time points
@@ -69,11 +70,11 @@ output:
 
 """
 function SelectTimePoints(
-    patient::SyntheticPatient,
+    patient::SyntheticPatient;
     time_points_G::AbstractVector{<:Real} = [0,15,30,60,120,180,240],
     time_points_I::AbstractVector{<:Real} = [0,15,30,60,120,180,240],
-    Variation_G::Real = 0.05,
-    Variation_I::Real = 0.1,
+    variation_G::Real = 0.05,
+    variation_I::Real = 0.1,
 )
     # set time_points to correspond to indexes
     index_points_G = time_points_G .+ 1
@@ -94,8 +95,10 @@ function SelectTimePoints(
     insulin = outputs.plasma_insulin[index_points_I]
 
     # add noise
-    noise_glucose = rand() * (2 * Variation_G) + (1 - Variation_G)
-    noise_insulin = rand() * (2 * Variation_I) + (1 - Variation_I)
+    noise_glucose = rand() * (2 * variation_G
+) + (1 - variation_G
+)
+    noise_insulin = rand() * (2 * variation_I) + (1 - variation_I)
 
     glucose = glucose .* noise_glucose
     insulin = insulin .* noise_insulin
@@ -107,9 +110,9 @@ end
 function SelectTimePoints(
     patient::SyntheticPatient,
     parameter_values::AbstractVector,
-    time_points::AbstractVector{<:Real},
-    Variation_G::Real = 0.05,
-    Variation_I::Real = 0.1,
+    time_points::AbstractVector{<:Real};
+    variation_G::Real = 0.05,
+    variation_I::Real = 0.1,
 )
     # set time_points to correspond to indexes
     index_points = time_points .+ 1
@@ -128,8 +131,8 @@ function SelectTimePoints(
     insulin = outputs.plasma_insulin[index_points]
 
     # add noise
-    noise_glucose = rand() * (2 * Variation_G) + (1 - Variation_G)
-    noise_insulin = rand() * (2 * Variation_I) + (1 - Variation_I)
+    noise_glucose = rand() * (2 * variation_G) + (1 - variation_G)
+    noise_insulin = rand() * (2 * variation_I) + (1 - variation_I)
 
     glucose = glucose .* noise_glucose
     insulin = insulin .* noise_insulin
@@ -141,11 +144,11 @@ end
 
 function SelectTimePoints(
     model::EDES,
-    parameter_values::AbstractVector,
+    parameter_values::AbstractVector;
     time_points_G::AbstractVector{<:Real} = [0,15,30,60,120,180,240],
     time_points_I::AbstractVector{<:Real} = [0,15,30,60,120,180,240],
-    Variation_G::Real = 0.05,
-    Variation_I::Real = 0.1,
+    variation_G::Real = 0.05,
+    variation_I::Real = 0.1,
 )
     # set time_points to correspond to indexes
     index_points_G = time_points_G .+ 1
@@ -162,8 +165,10 @@ function SelectTimePoints(
     insulin = outputs.plasma_insulin[index_points_I]
 
     # add noise
-    noise_glucose = rand() * (2 * Variation_G) + (1 - Variation_G)
-    noise_insulin = rand() * (2 * Variation_I) + (1 - Variation_I)
+    noise_glucose = rand() * (2 * variation_G
+) + (1 - variation_G
+)
+    noise_insulin = rand() * (2 * variation_I) + (1 - variation_I)
 
     glucose = glucose .* noise_glucose
     insulin = insulin .* noise_insulin

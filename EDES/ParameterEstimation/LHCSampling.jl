@@ -34,7 +34,7 @@ function Preselection_LHS(
         k6_index = findfirst(x -> x == "k6", model.estimated_params)
 
         # change the bounds of k6 to 0.1 and 2
-        new_lb[k6_index] = 0.1
+        new_lb[k6_index] = 0.5
         new_ub[k6_index] = 2 
     end
     

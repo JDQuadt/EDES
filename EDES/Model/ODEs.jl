@@ -1,7 +1,7 @@
 
 """
 Jesse Quadt, 1416367
-Variant of the MixedMealModel describing the glucose-insulin-triglyceride-NEFA system in humans after a mixed meal.
+Rozendaal 2018 version of the EDES model describing the glucose-Insulin system in humans after an OGTT.
 
 Inputs:
 *  `constants`: NamedTuple, containing the model constants with the following fields
@@ -64,7 +64,7 @@ function ODEs()
     G_liv = G_liv_b - k4.*f_I.*I_d₁ - k3.*(G_pl - G_b)
     # Glucose concentration in gut
     G_con_gut = k2.*(f_G/(V_G*BW)).*M_G_gut
-    # Insulin independent glucose utillisation by tissues
+    # Insulin independent glucose utillisation by tissues (brain)
     G_util_ii = G_liv_b*((Km + G_b)./G_b).*(G_pl./(Km + G_pl))
     # Insulin dependent glucose utillisation (liver,muscle,adipose)
     G_util_id = k5.*f_I.*I_d₁ .*(G_pl./(Km + G_pl))

@@ -71,8 +71,8 @@ function make_ErrorFunction(model::EDES, G_measurements::AbstractVector, G_timep
             
     function ErrorFunction(output,parameters)
         # define normalized loss for all four measurements
-        glucose_loss = ((output.plasma_glucose[indices_timepoints[1]] .- G_measurements) / maximum(G_measurements)) .* 10
-        insulin_loss = ((output.plasma_insulin[indices_timepoints[2]] .- I_measurements) / maximum(I_measurements)) .* 10
+        glucose_loss = ((output.plasma_glucose[indices_timepoints[1]] .- G_measurements) / maximum(G_measurements)) .*2
+        insulin_loss = ((output.plasma_insulin[indices_timepoints[2]] .- I_measurements) / maximum(I_measurements)) 
         
         # scaling term (ask Max for explanation of this term)
         scaling_term = maximum(G_measurements)
@@ -90,7 +90,6 @@ function make_ErrorFunction(model::EDES, G_measurements::AbstractVector, G_timep
         
         # Steady state of the plasma glucose should after some time (240 min) return to the fasting glucose
         error_steady_state_G = (parameters[13] - output.plasma_glucose[times .== 240][1])
-
         # combine regularisation terms
         regularisation_error = [error_AUC_G; error_steady_state_G]
         

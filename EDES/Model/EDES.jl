@@ -8,15 +8,12 @@ end
 
 
 """
-Mixed meal model for simulating glucose, insulin, triglycerides and non-esterified fatty acids in plasma after a mixed meal.
+EDES model for simulating glucose, insulin in plasma after a OGTT.
 
 input:
 - fasting_glucose: fasting glucose in plasma (first time point of the data) (in mmol/L)
 - fasting_insulin: fasting insulin in plasma (in uIU/mL)
-- fasting_TG: fasting triglycerides in plasma (in mmol/L)
-- fasting_NEFA: fasting non-esterified fatty acids in plasma (in mmol/L)
 - G_dose: mass of glucose in the meal
-- TG_dose: mass of triglycerides in the meal
 - BW: body weight of the individual
 - timespan: tuple of the start and end time of the simulation (default: (0.0, 480.0))
 - estimated_params: vector of the names of the parameters to be estimated (default: ["k1","k5","k6","k11","k12","tau_LPL","k14","k16"])
@@ -26,7 +23,7 @@ or
 - params: vector of the meal response data
 
 output:
-- * prob: ODE problem for the mixed meal model
+- * prob: ODE problem for the EDES model
 - * estimated_params: vector of the names of the parameters to be estimated
 """
 function EDES(
@@ -34,7 +31,7 @@ function EDES(
     fasting_insulin::Real = 18.,
     G_dose::Real = 75000.0,
     BW::Real = 70.0;
-    estimated_params::AbstractVector{String} = ["k1","k5","k6","k11","k12","tau_LPL","k14","k16"],
+    estimated_params::AbstractVector{String} = ["k1","k5","k6"],
     timespan::Tuple{Real,Real} = (0.0, 240.0),
 )
     # check if the estimated parameters are in the model

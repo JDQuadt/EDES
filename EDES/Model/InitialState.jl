@@ -1,17 +1,10 @@
 """
 InitialState:
-function with multiple methods that generates an initial state of the model. Takes the meal response data as input in different formats.
+function to create the initial state vector for the EDES model.
 
 input:
 - fasting_glucose: fasting glucose in plasma (first time point of the data)
 - fasting_insulin: fasting insulin in plasma
-- fasting_TG: fasting triglycerides in plasma
-- fasting_NEFA: fasting non-esterified fatty acids in plasma
-
-or 
-- params: named tuple of the meal response data
-or
-- params: vector of the meal response data 
 
 output:
 - initial_state: vector of initial state values

@@ -55,8 +55,8 @@ function Interactive_plots_EDES(
     lines!(ax_insulin, @lift(outputs[$i].plasma_insulin), color = @lift($accepted[$i] ? :lightgreen : :red))
 
     # plot the data points
-    scatter!(ax_glucose, time_G, @lift(glucose[$i, :]), color = :black)
-    scatter!(ax_insulin, time_I, @lift(insulin[$i, :]), color = :black)
+    GLMakie.scatter!(ax_glucose, time_G, @lift(glucose[$i, :]), color = :black)
+    GLMakie.scatter!(ax_insulin, time_I, @lift(insulin[$i, :]), color = :black)
 
     # create a subgridlayout for the buttons
     subgl = GridLayout(f[2, 1:2], tellwidth = false)
