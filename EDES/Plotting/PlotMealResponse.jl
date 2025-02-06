@@ -82,8 +82,8 @@ function PlotMealResponse(
     f_G = 0.005551 # conversion factor for glucose, from mg/l to mmol/l
     V_G = (260/sqrt(BW/70))/1000 # volume of distribution of glucose
     Auc_from_gut = ((V_G*BW)/f_G)*trapz(outputs.time, outputs.glucose_gut_to_plasma_flux)*0.001
-    println(Auc_from_gut)
-   Plots.plot(glucose_plot, insulin_plot, Glucose_from_gut_plot, layout = (1, 3),legend=false)
+
+    Plots.plot(glucose_plot, insulin_plot, Glucose_from_gut_plot, layout = (1, 3),legend=false)
 end
 
 function PlotMealResponse(
@@ -99,7 +99,6 @@ function PlotMealResponse(
     for (i, (model, estimated_params)) in enumerate(zip(models, estimated_params_list))
         # Make the full parameter vector
         full_parameter_vector = make_full_parameter_vector(model, estimated_params)
-        BW = full_parameter_vector[end]
 
         # Compute outputs
         outputs = output(model, full_parameter_vector, timespan)
@@ -110,5 +109,33 @@ function PlotMealResponse(
     end
 
     # CombinePlots.plots into a single layout
-   Plots.plot(glucose_plot, insulin_plot, layout = (1, 2), legend = false)
+    Plots.plot(glucose_plot, insulin_plot, layout = (1, 2), legend = false)
+end
+
+
+function PlotMealResponse(
+    model::EDES,
+    parameter_names::AbstractVector{String},
+    parameter_values::AbstractMatrix{<:Real},
+    timespan::Tuple{Real,Real} = (0.0, 240.0),
+)
+    # Create empty plots
+    glucose_plot =Plots.plot(xlabel = "time (min)", ylabel = "glucose (mmol/L)", title = "Glucose Response")
+    insulin_plot =Plots.plot(xlabel = "time (min)", ylabel = "insulin (uIU/mL)", title = "Insulin Response")
+
+       # Iterate over eachparameter set
+       for (i, estimated_params) in enumerate(eachcol(parameter_values))
+        # Make the full parameter vector
+        full_parameter_vector = make_full_parameter_vector(parameter_names, estimated_params)
+
+        # Compute outputs
+        outputs = output(model, full_parameter_vector, timespan)
+
+        # Add glucose and insulin plots for this model
+       Plots.plot!(glucose_plot, outputs.time, outputs.plasma_glucose, label = "Measurement $i")
+       Plots.plot!(insulin_plot, outputs.time, outputs.plasma_insulin, label = "Measurement $i")
+    end
+
+    # Combine plots into a single layout
+    Plots.plot(glucose_plot, insulin_plot, layout = (1, 2), legend = true)
 end

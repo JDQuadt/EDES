@@ -3,6 +3,14 @@ struct SyntheticPatient
     ParameterValues::AbstractVector
     ID::Int
 end
+
+struct SyntheticProgression
+    patient::SyntheticPatient
+    long_time_points::AbstractVector{<:Real}
+    parameter_names::AbstractVector{String}
+    parameter_values::AbstractMatrix
+end
+
 function MakePatients(
     n_patients::Int,
     estimated_params::AbstractVector{String},
@@ -177,3 +185,39 @@ function SelectTimePoints(
     return [glucose, insulin]
 end
 
+function SelectTimePoints(
+    progression::SyntheticProgression,
+    time_points_G::AbstractVector{<:Real} = [0,15,30,60,120,180,240],
+    time_points_I::AbstractVector{<:Real} = [0,15,30,60,120,180,240];
+    variation_G::Real = 0.05,
+    variation_I::Real = 0.1,
+)
+    # set time_points to correspond to indexes
+    index_points_G = time_points_G .+ 1
+    index_points_I = time_points_I .+ 1
+
+    # get the parameter values
+    patient = progression.patient
+    model = patient.EDES
+    parameter_names = progression.parameter_names
+    
+    # make the full parameter vector
+    full_parameter_vector = make_full_parameter_vector(model, progression.parameter_values)
+
+    # compute output
+    outputs = output(model, full_parameter_vector)
+
+    # select glucose, insulin, TG and NEFA at the selected time_points
+    glucose = outputs.plasma_glucose[index_points_G]
+    insulin = outputs.plasma_insulin[index_points_I]
+
+    # add noise
+    noise_glucose = rand() * (2 * variation_G) + (1 - variation_G)
+    noise_insulin = rand() * (2 * variation_I) + (1 - variation_I)
+
+    glucose = glucose .* noise_glucose
+    insulin = insulin .* noise_insulin
+
+    return [glucose, insulin]
+
+end
