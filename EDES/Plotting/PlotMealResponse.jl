@@ -127,7 +127,6 @@ function PlotMealResponse(
        for (i, estimated_params) in enumerate(eachcol(parameter_values))
         # Make the full parameter vector
         full_parameter_vector = make_full_parameter_vector(parameter_names, estimated_params)
-
         # Compute outputs
         outputs = output(model, full_parameter_vector, timespan)
 
