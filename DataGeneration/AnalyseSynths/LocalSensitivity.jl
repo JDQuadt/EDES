@@ -135,7 +135,7 @@ function LocalSensitivityAnalysis(
     # extract the model and parameter values
     model = deepcopy(patient.EDES)
 
-    original_parameter_values = make_full_parameter_vector(parameter_names_changed, parameter_values_changed)
+    original_parameter_values = make_full_parameter_vector(model,parameter_names_changed, parameter_values_changed)
 
     # loop over selected parameters
     for (x,i) in enumerate(parameter_indices)

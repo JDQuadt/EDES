@@ -9,6 +9,8 @@ struct SyntheticProgression
     long_time_points::AbstractVector{<:Real}
     parameter_names::AbstractVector{String}
     parameter_values::AbstractMatrix
+    fasting_glucose::AbstractVector{<:Real}
+    fasting_insulin::AbstractVector{<:Real}
 end
 
 function MakePatients(

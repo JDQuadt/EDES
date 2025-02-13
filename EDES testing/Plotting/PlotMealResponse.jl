@@ -4,7 +4,7 @@ function PlotMealResponse(
     timespan::Tuple{Real,Real} = (0.0, 240.0)
 )
     # make the full parameter vector
-
+        
     full_parameter_vector = make_full_parameter_vector(model, estimated_params)
     BW = full_parameter_vector[end]
     # compute output
@@ -49,6 +49,7 @@ function PlotMealResponse(
     model::EDES;
     full_params::AbstractVector{<:Real},
 )
+
     # compute output
     outputs = output(model, full_params)
 
@@ -91,6 +92,7 @@ function PlotMealResponse(
     estimated_params_list::Vector{<:AbstractVector{<:Real}},
     timespan::Tuple{Real,Real} = (0.0, 240.0)
 )
+
     # Create emptyPlots.plots
     glucose_plot =Plots.plot(xlabel = "time (min)", ylabel = "glucose (mmol/L)", title = "Glucose Response")
     insulin_plot =Plots.plot(xlabel = "time (min)", ylabel = "insulin (uIU/mL)", title = "Insulin Response")
@@ -98,7 +100,9 @@ function PlotMealResponse(
     # Iterate over each model and parameter set
     for (i, (model, estimated_params)) in enumerate(zip(models, estimated_params_list))
         # Make the full parameter vector
+        model
         full_parameter_vector = make_full_parameter_vector(model, estimated_params)
+        # println(full_parameter_vector)
 
         # Compute outputs
         outputs = output(model, full_parameter_vector, timespan)
@@ -113,10 +117,12 @@ function PlotMealResponse(
 end
 
 
-function PlotMealResponse(
+function PlotMealResponseProgression(
     model::EDES,
     parameter_names::AbstractVector{String},
     parameter_values::AbstractMatrix{<:Real},
+    fasting_glucose::AbstractVector{<:Real},
+    fasting_insulin::AbstractVector{<:Real},
     timespan::Tuple{Real,Real} = (0.0, 240.0),
 )
     # Create empty plots
@@ -126,7 +132,12 @@ function PlotMealResponse(
        # Iterate over eachparameter set
        for (i, estimated_params) in enumerate(eachcol(parameter_values))
         # Make the full parameter vector
-        full_parameter_vector = make_full_parameter_vector(parameter_names, estimated_params)
+        full_parameter_vector = make_full_parameter_vector(model, parameter_names, estimated_params)
+
+        # Update model.prob and the initial_state
+        model.prob.p[13] = fasting_glucose[i]
+        model.prob.p[14] = fasting_insulin[i]
+        model.prob.u0= InitialState(fasting_glucose[i], fasting_insulin[i])
         # Compute outputs
         outputs = output(model, full_parameter_vector, timespan)
 

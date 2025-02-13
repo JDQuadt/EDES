@@ -31,6 +31,7 @@ output:
 function make_full_parameter_vector(model::EDES, estimated_parameter_values::AbstractVector)
     estimated_parameter_names = model.estimated_params
     fixed_parameters = model.prob.p
+    println(fixed_parameters)
     estimated_parameter_indices = relate_names_to_indices(estimated_parameter_names)
     full_parameter_vector = fixed_parameters
 
@@ -39,7 +40,7 @@ function make_full_parameter_vector(model::EDES, estimated_parameter_values::Abs
     return full_parameter_vector	
 end
 
-function make_full_parameter_vector(parameter_names::AbstractVector{String}, parameter_values::AbstractVector)
+function make_full_parameter_vector(model::EDES,parameter_names::AbstractVector{String}, parameter_values::AbstractVector)
     estimated_parameter_indices = relate_names_to_indices(parameter_names)
     full_parameter_vector = model.prob.p
     full_parameter_vector[estimated_parameter_indices] .= parameter_values
