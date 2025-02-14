@@ -138,3 +138,36 @@ function PlotMealResponse(
     # Combine plots into a single layout
     Plots.plot(glucose_plot, insulin_plot, layout = (1, 2), legend = true)
 end
+
+function PlotMealResponseProgression(
+    model::EDES,
+    parameter_names::AbstractVector{String},
+    parameter_values::AbstractMatrix{<:Real},
+    fasting_glucose::AbstractVector{<:Real},
+    fasting_insulin::AbstractVector{<:Real},
+    timespan::Tuple{Real,Real} = (0.0, 240.0),
+)
+    # Create empty plots
+    glucose_plot =Plots.plot(xlabel = "time (min)", ylabel = "glucose (mmol/L)", title = "Glucose Response")
+    insulin_plot =Plots.plot(xlabel = "time (min)", ylabel = "insulin (uIU/mL)", title = "Insulin Response")
+
+       # Iterate over eachparameter set
+       for (i, estimated_params) in enumerate(eachcol(parameter_values))
+        # Make the full parameter vector
+        full_parameter_vector = make_full_parameter_vector(model, parameter_names, estimated_params)
+
+        # Update model.prob and the initial_state
+        model.prob.p[13] = fasting_glucose[i]
+        model.prob.p[14] = fasting_insulin[i]
+        model.prob.u0= InitialState(fasting_glucose[i], fasting_insulin[i])
+        # Compute outputs
+        outputs = output(model, full_parameter_vector, timespan)
+
+        # Add glucose and insulin plots for this model
+       Plots.plot!(glucose_plot, outputs.time, outputs.plasma_glucose, label = "Measurement $i")
+       Plots.plot!(insulin_plot, outputs.time, outputs.plasma_insulin, label = "Measurement $i")
+    end
+
+    # Combine plots into a single layout
+    Plots.plot(glucose_plot, insulin_plot, layout = (1, 2), legend = true)
+end
