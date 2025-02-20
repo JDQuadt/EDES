@@ -71,7 +71,7 @@ function make_ErrorFunction(model::EDES, G_measurements::AbstractVector, G_timep
             
     function ErrorFunction(output,parameters)
         # define normalized loss for all four measurements
-        glucose_loss = ((output.plasma_glucose[indices_timepoints[1]] .- G_measurements) / maximum(G_measurements)) .*2
+        glucose_loss = ((output.plasma_glucose[indices_timepoints[1]] .- G_measurements) / maximum(G_measurements)) 
         insulin_loss = ((output.plasma_insulin[indices_timepoints[2]] .- I_measurements) / maximum(I_measurements)) 
         
         # scaling term (ask Max for explanation of this term)

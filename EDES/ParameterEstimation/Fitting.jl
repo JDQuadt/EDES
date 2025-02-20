@@ -5,9 +5,9 @@ function ParameterEstimation(
     meal_G::Real,
     time_G::AbstractVector,
     time_I::AbstractVector;
-    estimated_params::AbstractVector{String} = ["k1","k5","k6", "k8"], 
-    ub::AbstractVector = [0.5, 1.5, 10., 20.],
-    lb::AbstractVector =  [0.0005, 0, 0, 0.], 
+    estimated_params::AbstractVector{String} = ["k1","k5","k6"], 
+    ub::AbstractVector = [0.5, 1.5, 10.],
+    lb::AbstractVector =  [0.0005, 0, 0], 
     save_boolean::Bool = false,
     file_name::String = "parameter_set.csv",
     )

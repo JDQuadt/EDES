@@ -64,13 +64,13 @@ function PlotMealResponse(
     estimated_params_values::AbstractVector{<:Real},
     fasting_glucose::Real = 5.5,
     fasting_insulin::Real = 18.,
+    
 )
     # make the model 
     model = EDES(fasting_glucose, fasting_insulin, estimated_params = estimated_params_names, )
     
     # make the full parameter vector
     full_params = make_full_parameter_vector(model, estimated_params_values)
-    BW = full_params[end]
     # compute output
     outputs = output(model, full_params)
 
@@ -78,14 +78,38 @@ function PlotMealResponse(
     
     insulin_plot =Plots.plot(outputs.time, outputs.plasma_insulin, label = "insulin", xlabel = "time (min)", ylabel = "insulin (uIU/mL)")
     
-    Glucose_from_gut_plot =Plots.plot(outputs.time, outputs.glucose_gut_to_plasma_flux, label = "glucose from gut", xlabel = "time (min)", ylabel = "glucose flux (mmol/min)")
-    f_G = 0.005551 # conversion factor for glucose, from mg/l to mmol/l
-    V_G = (260/sqrt(BW/70))/1000 # volume of distribution of glucose
-    Auc_from_gut = ((V_G*BW)/f_G)*trapz(outputs.time, outputs.glucose_gut_to_plasma_flux)*0.001
+    # Glucose_from_gut_plot =Plots.plot(outputs.time, outputs.glucose_gut_to_plasma_flux, label = "glucose from gut", xlabel = "time (min)", ylabel = "glucose flux (mmol/min)")
 
-    Plots.plot(glucose_plot, insulin_plot, Glucose_from_gut_plot, layout = (1, 3),legend=false)
+
+    Plots.plot(glucose_plot, insulin_plot, layout = (1, 2),legend=false)
 end
 
+function PlotMealResponse(
+    estimated_params_names::AbstractVector{},
+    estimated_params_values::AbstractVector{<:Real},
+    data::NamedTuple,
+    fasting_glucose::Real = 5.5,
+    fasting_insulin::Real = 18.,
+)
+    # make the model 
+    model = EDES(fasting_glucose, fasting_insulin, estimated_params = estimated_params_names, )
+    
+    # make the full parameter vector
+    full_params = make_full_parameter_vector(model, estimated_params_values)
+    # compute output
+    outputs = output(model, full_params)
+
+    glucose_plot =Plots.plot(outputs.time, outputs.plasma_glucose, label = "glucose", xlabel = "time (min)", ylabel = "glucose (mmol/L)")
+    scatter!(data.time, data.glc, label = "glucose_data")
+    
+    insulin_plot =Plots.plot(outputs.time, outputs.plasma_insulin, label = "insulin", xlabel = "time (min)", ylabel = "insulin (uIU/mL)")
+    scatter!(data.time, data.ins, label = "insulin_data")
+    
+    # Glucose_from_gut_plot =Plots.plot(outputs.time, outputs.glucose_gut_to_plasma_flux, label = "glucose from gut", xlabel = "time (min)", ylabel = "glucose flux (mmol/min)")
+
+
+    Plots.plot(glucose_plot, insulin_plot, layout = (1, 2),legend=false)
+end
 function PlotMealResponse(
     models::Vector{EDES},
     estimated_params_list::Vector{<:AbstractVector{<:Real}},
