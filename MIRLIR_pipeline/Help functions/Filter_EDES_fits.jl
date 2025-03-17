@@ -1,5 +1,4 @@
 using Statistics
-
 using Plots
 function check_oscillations(trajectory; threshold_sign_changes=8)
     """
